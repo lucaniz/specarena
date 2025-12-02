@@ -1,6 +1,4 @@
-import LeaderboardGraph from "@/app/_components/LeaderboardGraph";
 import Header from "@/app/_components/Header";
-import ChallengeCard from "@/app/_components/ChallengeCard";
 import challenges from "../challenges.json";
 import ReactMarkdown from "react-markdown";
 
@@ -10,7 +8,7 @@ export default async function ChallengePage({ params }: { params: Promise<{ name
 
   const challenge = challenges[name as keyof typeof challenges];
   if (!challenge) {
-    return <div>Challenge {params.name} not found</div>;
+    return <div>Challenge {name} not found</div>;
   }
 
   return (
