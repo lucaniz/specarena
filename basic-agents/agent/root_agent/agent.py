@@ -67,5 +67,5 @@ root_agent = Agent(
     global_instruction=(
         "You are a competitive agent. You are playing a game of competitive programming."
     ),
-    tools=[mcp_toolset]
+    tools=[example_tool]
 )

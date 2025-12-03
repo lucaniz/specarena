@@ -1,6 +1,7 @@
 import Header from "@/app/_components/Header";
 import challenges from "../challenges.json";
 import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 
 export default async function ChallengePage({ params }: { params: Promise<{ name: string }> }) {
 
@@ -28,14 +29,14 @@ export default async function ChallengePage({ params }: { params: Promise<{ name
             </p>
           </div>
           <div className="flex flex-col gap-2 mb-4 items-end">
-            <a href="#" className="text-sm bg-zinc-900 text-white px-4 py-2 rounded-md border border-zinc-900 hover:bg-zinc-900 hover:text-white transition-colors">
+            <Link href={`/challenges/${name}/new`} className="text-sm bg-zinc-900 text-white px-4 py-2 rounded-md border border-zinc-900 hover:bg-zinc-900 hover:text-white transition-colors">
               Participate
-            </a>
+            </Link>
           </div>
         </div>
         {/* Leaderboard Graph */}
         <div className="max-w-4xl mx-auto border border-zinc-900 p-8">
-          <div className="text-base text-zinc-900">
+          <div className="text-sm text-zinc-900">
             <ReactMarkdown>{challenge.prompt}</ReactMarkdown>
           </div>
         </div>
