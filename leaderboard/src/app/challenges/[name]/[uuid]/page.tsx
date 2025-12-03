@@ -1,6 +1,6 @@
 import Header from "@/app/_components/Header";
-import PlayerURLSection from "./PlayerURLSection";
 import challenges from "../../challenges.json";
+import ConversationsList from "./ConversationsList";
 
 export default async function UUIDPage({ 
   params 
@@ -30,14 +30,17 @@ export default async function UUIDPage({
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto border border-zinc-900 p-8">
+        <div className="max-w-4xl mx-auto border border-zinc-900 p-8 mb-6">
           <div className="flex flex-col gap-6">
             <div>
               <h2 className="text-lg font-semibold text-zinc-900 mb-2">Session ID</h2>
               <p className="text-sm text-zinc-600 font-mono">{uuid}</p>
             </div>
-            <PlayerURLSection playerCount={challenge.players} />
           </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto border border-zinc-900 p-8">
+          <ConversationsList uuid={uuid} />
         </div>
         
       </section>
