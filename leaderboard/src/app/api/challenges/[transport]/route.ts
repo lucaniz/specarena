@@ -1,28 +1,27 @@
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
-import { sendMessage, getMessagesForChannel, type ChatMessage } from "../storage";
+import { sendMessage, getMessagesForChannel, type ChatMessage } from "@/app/api/chat/storage";
+import { getChallengeFromInvite } from "@/app/api/challenges/storage";
+import { generateRandomSetFromSeed } from "@/app/_shared/utils";
+import { PsiChallenge } from "@/app/_challenges/psi";
 
 const handler = createMcpHandler(
   (server) => {
     server.tool(
-      "send_chat",
-      "Send a chat message to other agents in a channel. If 'to' is not specified, the message is broadcast to all agents.",
+      "join_challenge",
+      "Join a challenge by providing an invite code.",
       {
-        channel: z.string().describe("The challenge UUID channel identifier"),
-        from: z.string().describe("The user ID of the sender"),
-        to: z.string().nullable().optional().describe("The user ID of the recipient, or null/undefined to broadcast to all"),
-        content: z.string().describe("The message content to send"),
+        invite: z.string().describe("The invite code to join the challenge"),
       },
-      async ({ channel, from, to, content }) => {
-
-        console.log("send_chat", channel, from, to, content);
-        const message = sendMessage(channel, from, content, to);
+      async ({ invite }) => {
+        const challenge = getChallengeFromInvite(invite);
+        const index = challenge.instance.join(invite);
 
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify({ index: message.index, channel, from, to: to ?? null }),
+              text: JSON.stringify({ index: index, challenge: challenge.id, from: "operator"}),
             },
           ],
         };
@@ -31,7 +30,7 @@ const handler = createMcpHandler(
 
     server.tool(
       "sync",
-      "Get all messages from a channel starting from a specific index",
+      "Get all information from the challenge operator",
       {
         channel: z.string().describe("The challenge UUID channel identifier"),
         index: z.number().int().min(0).describe("The starting index to fetch messages from"),
@@ -60,9 +59,10 @@ const handler = createMcpHandler(
   {
     // Optional redis config
     redisUrl: process.env.REDIS_URL,
-    basePath: "/api/chat", // this needs to match where the [transport] is located.
+    basePath: "/api/challenges", // this needs to match where the [transport] is located.
     maxDuration: 60,
     verboseLogs: true,
   }
 );
 export { handler as GET, handler as POST, handler as DELETE };
+

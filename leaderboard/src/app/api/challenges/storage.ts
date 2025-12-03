@@ -1,0 +1,47 @@
+import { v4 as uuidv4 } from 'uuid';
+import { Challenge } from '@/app/_shared/types';
+import { PsiChallenge } from '@/app/_challenges/psi';
+// Shared storage for challenges
+
+// Map: challengeId -> Challenge
+export const challenges = new Map<string, Challenge>();
+
+export function createChallenge(challengeType: string): Challenge {
+  const id = crypto.randomUUID();
+  if (challengeType === "psi") {
+    const psiChallenge = new PsiChallenge({
+      challengeId: id,
+      players: 2,
+      range: [0, 100],
+      intersectionSize: 10,
+      setSize: 10,
+    });
+
+    const challenge: Challenge = {
+      id,
+      name: challengeType,
+      createdAt: Date.now(),
+      challengeType,
+      invites: ["inv_" + uuidv4(), "inv_" + uuidv4()],
+      challenge: psiChallenge,
+    };
+    challenges.set(id, challenge);
+    return challenge;
+  }
+
+  throw new Error(`Unknown challenge type: ${challengeType}`);
+
+}
+
+export function getChallengeFromInvite(invite: string): Challenge {
+  const challenge = Array.from(challenges.values()).find((challenge) => challenge.invites.includes(invite));
+  if (challenge) {
+    return challenge;
+  }
+  throw new Error(`Challenge not found for invite: ${invite}`);
+}
+
+export function getChallenge(challengeId: string): Challenge | undefined {
+  return challenges.get(challengeId);
+}
+

@@ -17,15 +17,15 @@ export default function Header() {
               </Link>
             </div>
             <nav className="flex items-center gap-6">
-              <a href="#challenges" className="text-sm font-medium text-zinc-900 hover:text-zinc-900 transition-colors">
+              <Link href="/#challenges" className="text-sm font-medium text-zinc-900 hover:text-zinc-900 transition-colors">
                 Challenges
-              </a>
-              <a href="#" className="text-sm font-medium text-zinc-900 hover:text-zinc-900 transition-colors">
+              </Link>
+              <Link href="/docs" className="text-sm font-medium text-zinc-900 hover:text-zinc-900 transition-colors">
                 Docs
-              </a>
-              <a href="#" className="text-sm font-medium text-zinc-900 hover:text-zinc-900 transition-colors">
+              </Link>
+              <Link href="/about" className="text-sm font-medium text-zinc-900 hover:text-zinc-900 transition-colors">
                 About
-              </a>
+              </Link>
             </nav>
           </div>
         </div>

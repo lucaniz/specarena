@@ -57,7 +57,7 @@ export function notifyChannelSubscribers(channel: string, message: ChatMessage):
     subscribers.forEach((controller) => {
       try {
         controller.enqueue(new TextEncoder().encode(messageToSend));
-      } catch (error) {
+      } catch {
         // Connection is dead, mark for removal
         deadConnections.push(controller);
       }
@@ -72,5 +72,43 @@ export function notifyChannelSubscribers(channel: string, message: ChatMessage):
       channelSubscribers.delete(channel);
     }
   }
+}
+
+export function sendChallengeMessage(
+  challengeId: string,
+  from: string,
+  content: string,
+  to?: string | null
+): ChatMessage {
+  const channel = "challenge_" + challengeId;
+  return sendMessage(channel, from, content, to);
+}
+
+export function sendMessage(
+  channel: string,
+  from: string,
+  content: string,
+  to?: string | null
+): ChatMessage {
+  const index = getNextIndex(channel);
+  const message: ChatMessage = {
+    channel,
+    from,
+    to: to ?? null,
+    content: content || "",
+    index,
+    timestamp: Date.now(),
+  };
+
+  // Get or create messages array for this channel
+  if (!messagesByChannel.has(channel)) {
+    messagesByChannel.set(channel, []);
+  }
+  messagesByChannel.get(channel)!.push(message);
+
+  // Notify WebSocket/SSE subscribers about the new message
+  notifyChannelSubscribers(channel, message);
+
+  return message;
 }
 

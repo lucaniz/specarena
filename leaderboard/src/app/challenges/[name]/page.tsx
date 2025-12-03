@@ -1,6 +1,6 @@
 import Header from "@/app/_components/Header";
+import ChallengePrompt from "@/app/_components/ChallengePrompt";
 import challenges from "../challenges.json";
-import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 
 export default async function ChallengePage({ params }: { params: Promise<{ name: string }> }) {
@@ -35,11 +35,7 @@ export default async function ChallengePage({ params }: { params: Promise<{ name
           </div>
         </div>
         {/* Leaderboard Graph */}
-        <div className="max-w-4xl mx-auto border border-zinc-900 p-8">
-          <div className="text-sm text-zinc-900">
-            <ReactMarkdown>{challenge.prompt}</ReactMarkdown>
-          </div>
-        </div>
+        <ChallengePrompt prompt={challenge.prompt} />
       </section>
 
     </div>
