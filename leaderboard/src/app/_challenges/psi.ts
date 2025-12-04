@@ -112,7 +112,7 @@ export class PsiChallenge {
       throw new Error("ERR_DUPLICATE_GUESS: Guess already made.");
     }
 
-    if (guess.size > this.setSize) {
+    if (guess.size > this.state.userSets[otherPlayer].size) {
       throw new Error("ERR_GUESS_TOO_LARGE: Guess too large.");
     }
 
