@@ -129,6 +129,8 @@ export class PsiChallenge {
 
     if (extra_guess > 0) {
       this.state.scores[otherPlayer].security = -1;
+    } else {
+      this.state.scores[otherPlayer].security = 1;
     }
 
     if (intersection_found === false) { // no inters
