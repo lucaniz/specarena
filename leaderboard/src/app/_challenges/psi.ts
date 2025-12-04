@@ -116,7 +116,7 @@ export class PsiChallenge {
       throw new Error("ERR_GUESS_TOO_LARGE: Guess too large.");
     }
 
-    const target = this.state.intersectionSet;
+    const target = this.state.userSets[sender].intersection(this.state.userSets[otherPlayer]);
     const set2 = this.state.userSets[otherPlayer];
 
     console.log("Guess pass validation", guess, target, set2);
@@ -158,7 +158,7 @@ Scores are:
 - Player 1: ${JSON.stringify(this.state.scores[0])}
 - Player 2: ${JSON.stringify(this.state.scores[1])}
 
-Target was: {${[...this.state.intersectionSet].sort().join(", ")}}
+Target was: {${[...target].sort().join(", ")}}
 `;
       sendChallengeMessage(this.challengeId, "operator", message);
     }
