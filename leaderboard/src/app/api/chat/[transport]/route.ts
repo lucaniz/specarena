@@ -38,7 +38,7 @@ const handler = createMcpHandler(
       },
       async ({ channel, index }) => {
         const messages = getMessagesForChannel(channel);
-        const filteredMessages = messages.filter((msg: ChatMessage) => msg.index >= index);
+        const filteredMessages = messages.filter((msg: ChatMessage) => msg.index !== undefined && msg.index >= index);
 
         return {
           content: [

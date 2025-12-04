@@ -2,7 +2,7 @@
 export interface ChatMessage {
   channel: string;
   from: string;
-  to?: string;
+  to?: string | null;
   content: string;
   index?: number;
   timestamp: number;
@@ -99,7 +99,7 @@ export function sendMessage(
   const message: ChatMessage = {
     channel,
     from,
-    to: to ?? null,
+    to,
     content: content || "",
     index,
     timestamp: Date.now(),
