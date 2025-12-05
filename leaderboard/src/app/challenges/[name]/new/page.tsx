@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 export default function NewChallengePage() {
@@ -8,8 +8,15 @@ export default function NewChallengePage() {
   const params = useParams();
   const name = params.name as string;
   const [error, setError] = useState<string | null>(null);
+  const hasCreatedRef = useRef(false);
 
   useEffect(() => {
+    // Prevent duplicate challenge creation in React Strict Mode
+    if (hasCreatedRef.current) {
+      return;
+    }
+    hasCreatedRef.current = true;
+
     async function createChallenge() {
       try {
         // Call the challenges API to create a new challenge
@@ -25,7 +32,7 @@ export default function NewChallengePage() {
           try {
             const errorData = await response.json();
             errorMessage = errorData.error || errorMessage;
-          } catch (e) {
+          } catch {
             // If response is not JSON, use status text or default message
             errorMessage = response.statusText || errorMessage;
           }
