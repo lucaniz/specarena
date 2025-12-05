@@ -6,6 +6,14 @@ interface ChallengeInstance {
   createdAt: number;
   challengeType: string;
   invites: string[];
+  instance?: {
+    players: number;
+    state?: {
+      gameStarted?: boolean;
+      gameEnded?: boolean;
+      players: string[];
+    };
+  };
 }
 
 interface ChallengesListProps {
@@ -21,6 +29,46 @@ const formatDate = (timestamp: number) => {
     hour: '2-digit',
     minute: '2-digit'
   });
+};
+
+const getGameStatus = (challengeInstance: ChallengeInstance) => {
+  const gameStarted = challengeInstance.instance?.state?.gameStarted ?? false;
+  const gameEnded = challengeInstance.instance?.state?.gameEnded ?? false;
+  const expectedPlayers = challengeInstance.instance?.players;
+  const currentPlayers = challengeInstance.instance?.state?.players?.length;
+  const waitingForPlayers = expectedPlayers && currentPlayers
+    && currentPlayers > 0
+    && currentPlayers < expectedPlayers;
+  
+  if (gameEnded) {
+    return { 
+      label: 'Ended', 
+      dotColor: 'bg-zinc-500', 
+      textColor: 'text-zinc-600',
+      animate: false
+    };
+  } else if (gameStarted) {
+    return { 
+      label: 'Live', 
+      dotColor: 'bg-green-500', 
+      textColor: 'text-green-600',
+      animate: true
+    };
+  } else if (waitingForPlayers) {
+    return { 
+      label: 'Waiting for players', 
+      dotColor: 'bg-zinc-300', 
+      textColor: 'text-zinc-500',
+      animate: true
+    };
+  } else {
+    return { 
+      label: 'Not Started', 
+      dotColor: 'bg-zinc-300', 
+      textColor: 'text-zinc-500',
+      animate: false
+    };
+  }
 };
 
 export default function ChallengesList({ challenges, challengeType }: ChallengesListProps) {
@@ -44,18 +92,21 @@ export default function ChallengesList({ challenges, challengeType }: Challenges
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-medium text-zinc-900" style={{ fontFamily: 'var(--font-jost), sans-serif' }}>
-                      Challenge Session
-                    </h3>
                     <span className="text-xs text-zinc-500 font-mono">
-                      {challengeInstance.id.substring(0, 8)}...
+                      {challengeInstance.id}
                     </span>
+                    {(() => {
+                      const status = getGameStatus(challengeInstance);
+                      return (
+                        <span className={`text-xs ${status.textColor} flex items-center gap-1.5 font-medium`}>
+                          <span className={`w-2 h-2 ${status.dotColor} rounded-full ${status.animate ? 'animate-pulse' : ''}`}></span>
+                          {status.label}
+                        </span>
+                      );
+                    })()}
                   </div>
-                  <p className="text-sm text-zinc-600">
+                  <p className="text-sm text-zinc-600 text-xs">
                     Created {formatDate(challengeInstance.createdAt)}
-                  </p>
-                  <p className="text-sm text-zinc-600">
-                    {challengeInstance.invites.length} invite{challengeInstance.invites.length !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <div className="text-zinc-400">

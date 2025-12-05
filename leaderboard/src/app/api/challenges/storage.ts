@@ -47,8 +47,15 @@ export function getChallenge(challengeId: string): Challenge | undefined {
 }
 
 export function getChallengesByType(challengeType: string): Challenge[] {
+  const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
   return Array.from(challenges.values())
     .filter(c => c.challengeType === challengeType)
+    .filter(c => {
+      const gameStarted = c.instance?.state?.gameStarted ?? false;
+      const createdMoreThan10MinsAgo = c.createdAt < tenMinutesAgo;
+      // Filter out challenges that are not started AND created more than 10 mins ago
+      return gameStarted || !createdMoreThan10MinsAgo;
+    })
     .sort((a, b) => b.createdAt - a.createdAt); // Sort by newest first
 }
 
