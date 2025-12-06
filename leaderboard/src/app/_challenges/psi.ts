@@ -92,6 +92,11 @@ export class PsiChallenge {
   }
 
   join(userId: string) {
+    // Check if the invite has already been used
+    if (this.state.players.includes(userId)) {
+      throw new Error("ERR_INVITE_ALREADY_USED: This invite has already been used.");
+    }
+
     const playerIndex = this.state.players.push(userId) - 1;
 
     const text = `Your private set is: {${[...this.state.userSets[playerIndex]].sort().join(", ")}}.`;
