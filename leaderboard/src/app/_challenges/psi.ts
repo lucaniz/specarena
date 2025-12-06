@@ -1,5 +1,5 @@
 import { generateRandomSetFromSeed } from "../_shared/utils";
-import { ChatMessage, sendChallengeMessage } from "../api/chat/storage";
+import { ChatMessage, sendChallengeMessage, sendMessage } from "../api/chat/storage";
 
 interface PsiChallengeParams {
   challengeId: string;
@@ -151,7 +151,7 @@ export class PsiChallenge {
     console.log("player", sender, "intersection_found", intersection_found, "wrong_guess", wrong_guess, "extra_guess", extra_guess, "target", target, "set2", set2);
     console.log("SCORES - intermediate", this.state.scores);
 
-    sendChallengeMessage(this.challengeId, "operator", `Player ${sender + 1} sent a guess`)
+    sendMessage(this.challengeId, "operator", `Player ${message.from} sent a guess`)
     sendChallengeMessage(this.challengeId, "operator", `Player ${otherPlayer + 1} outcome:
 - Intersection Found: ${intersection_found}
 - Wrong Guess: ${wrong_guess}
