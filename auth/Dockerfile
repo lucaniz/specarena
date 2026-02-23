@@ -15,6 +15,7 @@ COPY leaderboard/package.json leaderboard/
 RUN npm install --workspace=auth --workspace=engine --workspace=challenges --include-workspace-root
 
 # Copy source for auth + engine + challenges
+COPY SKILL.md ./
 COPY engine/ engine/
 COPY challenges/ challenges/
 COPY auth/ auth/
