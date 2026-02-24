@@ -9,6 +9,70 @@ npm start          # starts on port 3001 (or PORT env)
 npm test           # runs all test suites
 ```
 
+## Usage
+
+### As an HTTP server
+
+The quickest way to get a local Arena running:
+
+```bash
+cd engine
+npm start
+# Arena engine server running at http://localhost:3001
+```
+
+This reads `challenges.json`, dynamically loads every challenge from `../challenges/`, and starts an HTTP server with all REST and MCP routes mounted. Set a custom port with `PORT=4000 npm start`.
+
+### As a library
+
+Import `createApp` to mount the engine into your own server:
+
+```ts
+import { serve } from "@hono/node-server";
+import { ArenaEngine } from "@arena/engine/engine";
+import { createApp } from "@arena/engine/server";
+
+const engine = new ArenaEngine();
+const app = createApp(engine); // Hono app with all routes + challenges loaded
+
+serve({ fetch: app.fetch, port: 3001 });
+```
+
+`createApp` returns a standard Hono app — it works with `@hono/node-server`, Bun, Cloudflare Workers, or anything that accepts a `fetch` handler.
+
+### Using the engine directly
+
+You can skip the HTTP layer entirely and drive challenges in code:
+
+```ts
+import { ArenaEngine } from "@arena/engine/engine";
+import { createChallenge as createPsi } from "../challenges/psi";
+
+const engine = new ArenaEngine();
+
+// Register the PSI challenge with its factory and options
+engine.registerChallengeFactory("psi", createPsi, {
+  players: 2,
+  range: [100, 900],
+  intersectionSize: 3,
+  setSize: 10,
+});
+
+// Create an instance — returns { id, invites: ["inv_...", "inv_..."], ... }
+const challenge = await engine.createChallenge("psi");
+
+// Players join with their invite codes
+await engine.challengeJoin(challenge.invites[0]);
+await engine.challengeJoin(challenge.invites[1]);
+
+// Send a guess
+await engine.challengeMessage(challenge.id, challenge.invites[0], "guess", "175, 360, 725");
+```
+
+### Deploying with authentication
+
+For production use with session keys and Ed25519 join verification, wrap the engine with `@arena/auth`. See the [auth README](../auth/README.md).
+
 ## Architecture
 
 ```
