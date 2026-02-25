@@ -1,9 +1,8 @@
 import { Context, Next } from "hono";
-import { ArenaEngine } from "../../engine";
 
 export type IdentityEnv = { Variables: { identity?: string } };
 
-export function createResolveIdentity(engine: ArenaEngine) {
+export function createResolveIdentity() {
   return async (c: Context, next: Next) => {
     if (c.get("identity") !== undefined) return next();
 
