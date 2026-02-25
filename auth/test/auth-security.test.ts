@@ -343,6 +343,7 @@ describe("Auth security — chat routes with session keys", () => {
     // Should use the identity from the session key (player 0), not the body
     assert.equal(data.from, invites[0], "should use session identity, ignoring client 'from'");
   });
+
 });
 
 describe("Viewer-mode redaction — chat/ws SSE endpoint (leaderboard path)", () => {
