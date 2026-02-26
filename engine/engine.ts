@@ -12,9 +12,12 @@ import {
 } from "./types";
 import { ChatEngine, createChatEngine } from "./chat/ChatEngine";
 import { ArenaStorageAdapter, InMemoryArenaStorageAdapter } from "./storage/InMemoryArenaStorageAdapter";
+import { ScoringModule } from "./scoring/index";
+
 export interface EngineOptions {
   storageAdapter?: ArenaStorageAdapter;
   chatEngine?: ChatEngine;
+  scoring?: ScoringModule;
 }
 
 export class ArenaEngine {
@@ -23,18 +26,29 @@ export class ArenaEngine {
   private readonly challengeOptions: Map<string, Record<string, unknown>>;
   private readonly challengeMetadataMap: Map<string, ChallengeMetadata>;
   readonly chat: ChatEngine;
+  scoring: ScoringModule | null;
 
   constructor(options: EngineOptions = {}) {
     this.storageAdapter = options.storageAdapter ?? new InMemoryArenaStorageAdapter();
     this.challengeFactories = new Map<string, ChallengeFactory>();
     this.challengeOptions = new Map<string, Record<string, unknown>>();
     this.challengeMetadataMap = new Map<string, ChallengeMetadata>();
+    this.scoring = options.scoring ?? null;
     this.chat = options.chatEngine ?? createChatEngine({
       isChannelRevealed: async (channel) => {
         const challengeId = fromChallengeChannel(channel);
         if (!challengeId) return false;
         const challenge = await this.getChallenge(challengeId);
         return challenge?.instance?.state?.gameEnded ?? false;
+      },
+      onChallengeEvent: async (challengeId, event) => {
+        if (event.type !== "game_ended" || !this.scoring) return;
+        const challenge = await this.getChallenge(challengeId);
+        if (!challenge) return;
+        const result = ScoringModule.challengeToGameResult(challenge);
+        if (!result) return;
+        this.scoring.recordGame(result)
+          .catch((err) => console.error("Scoring recordGame failed:", err));
       },
     });
   }
@@ -102,9 +116,7 @@ export class ArenaEngine {
     }
 
     const options = this.challengeOptions.get(challengeType);
-    const instance = factory(id, options, {
-      messaging: this.chat,
-    });
+    const instance = factory(id, options, { messaging: this.chat });
 
     const challenge: Challenge = {
       id,

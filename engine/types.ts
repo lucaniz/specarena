@@ -16,14 +16,13 @@ export interface ChatMessage {
   redacted?: boolean;
 }
 
-export interface Score {
-  security: number;
-  utility: number;
-}
+import type { Score } from "@arena/scoring";
+export type { Score };
 
 export interface ChallengeOperatorState {
   gameStarted: boolean;
   gameEnded: boolean;
+  completedAt?: number;
   scores: Score[];
   players: string[];
   playerIdentities: Record<string, string>; // invite → userId
@@ -73,12 +72,20 @@ export interface ChallengeMetadata {
 export interface ChallengeConfig {
   name: string;
   options?: Record<string, unknown>;
+  scoring?: string[];
 }
+
+export interface GameEndedEvent {
+  type: "game_ended";
+  data: ChallengeOperatorState;
+}
+
+export type ChallengeOperatorEvent = GameEndedEvent;
 
 export interface ChallengeMessaging {
   sendMessage: (channel: string, from: string, content: string, to?: string | null) => Promise<ChatMessage>;
   sendChallengeMessage: (challengeId: string, from: string, content: string, to?: string | null) => Promise<ChatMessage>;
-  broadcastChallengeEvent?: (challengeId: string, event: Record<string, unknown>) => void;
+  broadcastChallengeEvent?: (challengeId: string, event: ChallengeOperatorEvent) => void;
 }
 
 export interface ChallengeFactoryContext {
