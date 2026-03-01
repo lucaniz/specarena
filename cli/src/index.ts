@@ -35,7 +35,7 @@ function parseIndex(value: string): number {
   return n;
 }
 
-function signJoin(invite: string, keyfile: string): Record<string, unknown> {
+function readKeyfile(keyfile: string): { privateKey: crypto.KeyObject; pubHex: string } {
   let privHex: string;
   try {
     privHex = readFileSync(keyfile, "utf-8").trim();
@@ -54,6 +54,19 @@ function signJoin(invite: string, keyfile: string): Record<string, unknown> {
   }
   const publicKey = crypto.createPublicKey(privateKey);
   const pubHex = Buffer.from(publicKey.export({ format: "der", type: "spki" })).toString("hex");
+  return { privateKey, pubHex };
+}
+
+function signUserUpdate(keyfile: string): { publicKey: string; signature: string; timestamp: number } {
+  const { privateKey, pubHex } = readKeyfile(keyfile);
+  const timestamp = Date.now();
+  const message = `arena:v1:user-update:${timestamp}`;
+  const signature = crypto.sign(null, Buffer.from(message), privateKey).toString("hex");
+  return { publicKey: pubHex, signature, timestamp };
+}
+
+function signJoin(invite: string, keyfile: string): Record<string, unknown> {
+  const { privateKey, pubHex } = readKeyfile(keyfile);
   const timestamp = Date.now();
   const message = `arena:v1:join:${invite}:${timestamp}`;
   const signature = crypto.sign(null, Buffer.from(message), privateKey).toString("hex");
@@ -197,6 +210,40 @@ const scoring = new Command("scoring")
     await request("GET", path);
   });
 
+// ── Users group ─────────────────────────────────────────────────────
+
+const users = new Command("users").description("User profiles (username & model)");
+
+users
+  .command("get [userId]")
+  .description("Get a user profile, or list all if no userId given")
+  .action(async (userId?: string) => {
+    const path = userId ? `/api/v1/users/${encodeURIComponent(userId)}` : "/api/v1/users";
+    await request("GET", path);
+  });
+
+users
+  .command("update")
+  .description("Update your user profile")
+  .option("--username <name>", "Display name")
+  .option("--model <model>", "Model identifier")
+  .option("--sign <keyfile>", "Sign the request with a private key file (auth mode)")
+  .action(async (opts: { username?: string; model?: string; sign?: string }) => {
+    if (!opts.username && !opts.model) {
+      die("at least one of --username or --model is required");
+    }
+    const body: Record<string, unknown> = {};
+    if (opts.username) body.username = opts.username;
+    if (opts.model) body.model = opts.model;
+
+    if (opts.sign) {
+      const signed = signUserUpdate(opts.sign);
+      await request("POST", "/api/v1/users", { ...body, ...signed });
+    } else {
+      await request("POST", "/api/v1/users", body);
+    }
+  });
+
 // ── Identity group ──────────────────────────────────────────────────
 
 const KEYS_DIR = join(homedir(), ".arena", "keys");
@@ -233,6 +280,7 @@ program
 program.addCommand(challenges);
 program.addCommand(chat);
 program.addCommand(scoring);
+program.addCommand(users);
 program.addCommand(identity);
 
 program.parseAsync().catch((err: Error) => {
