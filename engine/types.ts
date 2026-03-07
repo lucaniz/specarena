@@ -67,6 +67,7 @@ export interface ChallengeMetadata {
   prompt: string;
   methods: { name: string; description: string }[];
   authors?: { name: string; url: string }[];
+  tags?: string[];
   url?: string;
   icon?: string;
   color?: string;

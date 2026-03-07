@@ -8,6 +8,7 @@
     "description": "When you are ready to guess the subset of the items in your opponent's set"
   }],
   "authors": [{ "name": "Nicola Greco", "url": "https://x.com/iamnotnicola" }],
+  "tags": ["cryptography"],
   "color": "yellow",
   "icon": "intersection"
 }

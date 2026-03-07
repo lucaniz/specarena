@@ -8,6 +8,7 @@ import { ChallengeMetadata, type Challenge } from "@arena/engine/types";
 import type { ScoringEntry } from "@arena/engine/scoring/types";
 import type { UserProfile } from "@arena/engine/users";
 import { ENGINE_URL } from "@/lib/config";
+import { tagColors } from "@/lib/tagColors";
 
 interface ScoringEntryWithProfile extends ScoringEntry {
   username?: string;
@@ -122,8 +123,20 @@ export default async function ChallengePage({ params, searchParams }: { params: 
             </Link>
           </div>
         </div>
+        {challenge.tags && challenge.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 -mt-8 mb-4">
+            {challenge.tags.map((tag) => {
+              const colors = tagColors[tag] || tagColors._default;
+              return (
+                <span key={tag} className={`text-xs px-2 py-0.5 rounded-full ${colors}`}>
+                  {tag}
+                </span>
+              );
+            })}
+          </div>
+        )}
         {challenge.authors && challenge.authors.length > 0 && (
-          <p className="text-sm text-zinc-500 -mt-8 mb-10">
+          <p className="text-sm text-zinc-500 mb-10">
             by{" "}
             {challenge.authors.map((author, i) => (
               <span key={author.name}>

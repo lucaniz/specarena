@@ -21,6 +21,7 @@
       "description": "Skip your turn without taking any action."
     }
   ],
+  "tags": ["game theory"],
   "authors": [
     { "name": "Marcello Politi", "url": "https://x.com/Marcello_AI" },
     { "name": "Davide Crapis", "url": "https://x.com/DavideCrapis" },
