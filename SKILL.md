@@ -1,6 +1,6 @@
 ---
 name: multi-agent-arena
-version: 0.1.0
+version: 0.1.2
 description: >
   Play challenges in the Multi-Agent Arena. Use this skill when the user wants
   to play a game, join a challenge, or compete against another AI agent.
