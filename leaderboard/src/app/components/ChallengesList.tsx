@@ -83,12 +83,12 @@ export default function ChallengesList({ challenges, challengeType, profiles = {
       ) : (
         <div className="border border-zinc-900 divide-y divide-zinc-100">
           <div className="flex items-center px-5 py-3 text-xs text-zinc-400 uppercase tracking-wider border-b border-zinc-200">
-            <span className="w-[80px] shrink-0">ID</span>
+            <span className="w-[80px] max-sm:hidden shrink-0">ID</span>
             <span className="w-[140px] max-sm:hidden shrink-0">Status</span>
             <span className="w-[100px] shrink-0 max-sm:hidden">Date</span>
             <span className="min-w-0 flex-1">Player</span>
-            <span className="w-[70px] text-right shrink-0 pl-3"><span className="max-sm:hidden">Utility</span><span className="sm:hidden">U</span></span>
-            <span className="w-[70px] max-sm:mr-1 text-right shrink-0 pl-3"><span className="max-sm:hidden">Security</span><span className="sm:hidden">S</span></span>
+            <span className="w-[70px] max-sm:w-[40px] text-right shrink-0 pl-3 max-sm:pl-1"><span className="max-sm:hidden">Utility</span><span className="sm:hidden">U</span></span>
+            <span className="w-[70px] max-sm:w-[40px] max-sm:mr-1 text-right shrink-0 pl-3 max-sm:pl-1"><span className="max-sm:hidden">Security</span><span className="sm:hidden">S</span></span>
             <span className="w-4 ml-2 shrink-0 max-sm:hidden"></span>
           </div>
           {challenges.map((challengeInstance) => {
@@ -105,7 +105,7 @@ export default function ChallengesList({ challenges, challengeType, profiles = {
                 className="flex items-start px-5 py-4 hover:bg-zinc-50 transition-colors cursor-pointer"
               >
                 <span className={`w-1.5 h-1.5 mt-[7px] ${status.dotColor} rounded-full ${status.animate ? 'animate-pulse' : ''} shrink-0 mr-3 sm:hidden`}></span>
-                <span className="w-[80px] text-sm max-sm:text-xs max-sm:mt-0.5 text-zinc-400 font-mono shrink-0">
+                <span className="w-[80px] text-sm text-zinc-400 font-mono shrink-0 max-sm:hidden">
                   {challengeInstance.id.slice(0, 8)}
                 </span>
                 <span className={`w-[140px] max-sm:hidden text-sm ${status.textColor} flex items-center gap-2 font-medium shrink-0`}>
@@ -117,6 +117,7 @@ export default function ChallengesList({ challenges, challengeType, profiles = {
                 </span>
                 {players.length > 0 && challengeInstance.state?.scores ? (
                   <div className="min-w-0 flex-1">
+                    <span className="sm:hidden text-xs text-zinc-400 font-mono block leading-tight mt-0.5">{challengeInstance.id.slice(0, 8)}</span>
                     {players.map((p, i) => {
                       const name = profiles[p]?.username;
                       const short = p.slice(0, 8);
@@ -136,8 +137,8 @@ export default function ChallengesList({ challenges, challengeType, profiles = {
                             </Link>
                             {didBreach && <FireIcon className="inline-block w-3 h-3 ml-1 text-red-300" />}
                           </span>
-                          <span className={`w-[70px] text-right text-xs font-mono shrink-0 pl-3 ${score?.utility === -1 ? 'text-violet-300' : 'text-zinc-400'}`}>{score?.utility ?? '–'}</span>
-                          <span className={`w-[70px] max-sm:mr-1 text-right text-xs font-mono shrink-0 pl-3 ${score?.security === -1 ? 'text-red-300' : 'text-zinc-400'}`}>{score?.security ?? '–'}</span>
+                          <span className={`w-[70px] max-sm:w-[40px] text-right text-xs font-mono shrink-0 pl-3 max-sm:pl-1 ${score?.utility === -1 ? 'text-violet-300' : 'text-zinc-400'}`}>{score?.utility ?? '–'}</span>
+                          <span className={`w-[70px] max-sm:w-[40px] max-sm:mr-1 text-right text-xs font-mono shrink-0 pl-3 max-sm:pl-1 ${score?.security === -1 ? 'text-red-300' : 'text-zinc-400'}`}>{score?.security ?? '–'}</span>
                           <span className="w-4 ml-2 shrink-0 max-sm:hidden"></span>
                         </div>
                       );
@@ -146,6 +147,7 @@ export default function ChallengesList({ challenges, challengeType, profiles = {
                 ) : (
                   <>
                     <span className="text-sm text-zinc-600 min-w-0 flex-1 truncate">
+                      <span className="sm:hidden text-xs text-zinc-400 font-mono block leading-tight mt-0.5">{challengeInstance.id.slice(0, 8)}</span>
                       {players.map((p, i) => {
                         const name = profiles[p]?.username;
                         const short = p.slice(0, 8);
