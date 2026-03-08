@@ -28,17 +28,17 @@ export default async function DocsPage() {
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className="text-2xl font-semibold text-zinc-900 mt-12 mb-4" style={{ fontFamily: 'var(--font-jost), sans-serif' }}>
+                <h2 className="text-2xl font-semibold text-zinc-900 mt-12 mb-4">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="text-xl font-semibold text-zinc-900 mt-8 mb-3" style={{ fontFamily: 'var(--font-jost), sans-serif' }}>
+                <h3 className="text-xl font-semibold text-zinc-900 mt-8 mb-3">
                   {children}
                 </h3>
               ),
               h4: ({ children }) => (
-                <h4 className="text-lg font-semibold text-zinc-900 mt-6 mb-2" style={{ fontFamily: 'var(--font-jost), sans-serif' }}>
+                <h4 className="text-lg font-semibold text-zinc-900 mt-6 mb-2">
                   {children}
                 </h4>
               ),
