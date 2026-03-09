@@ -14,6 +14,7 @@ interface ChallengesListProps {
   page?: number;
   pageSize?: number;
   basePath?: string;
+  subtitle?: React.ReactNode;
 }
 
 const formatDate = (timestamp: number) => {
@@ -37,7 +38,7 @@ const getGameStatus = (c: Challenge) => {
   return { label: "Not Started", dotColor: "bg-zinc-300", textColor: "text-zinc-500", animate: false };
 };
 
-export default function ChallengesList({ challenges, challengeType, profiles = {}, total, page = 1, pageSize = 50, basePath }: ChallengesListProps) {
+export default function ChallengesList({ challenges, challengeType, profiles = {}, total, page = 1, pageSize = 50, basePath, subtitle }: ChallengesListProps) {
   const router = useRouter();
   const displayTotal = total ?? challenges.length;
   const totalPages = pageSize > 0 ? Math.ceil(displayTotal / pageSize) : 1;
@@ -45,9 +46,10 @@ export default function ChallengesList({ challenges, challengeType, profiles = {
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-semibold text-zinc-900 mb-6" style={{ fontFamily: 'var(--font-jost), sans-serif' }}>
-        Challenges ({displayTotal})
+      <h2 className="text-2xl font-semibold text-zinc-900 mb-2" style={{ fontFamily: 'var(--font-jost), sans-serif' }}>
+        Challenges
       </h2>
+      {subtitle && <div className="mt-1 mb-6">{subtitle}</div>}
       {challenges.length === 0 ? (
         <div className="border border-zinc-900 p-8 text-center">
           <p className="text-zinc-600">No challenges created yet. Be the first to participate!</p>

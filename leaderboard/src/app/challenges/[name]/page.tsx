@@ -76,11 +76,14 @@ export default async function ChallengePage({ params, searchParams }: { params: 
   let challengesList: Challenge[] = [];
   let profiles: Record<string, UserProfile> = {};
   let challengesTotal = 0;
-  const [challengesResult, allScoring] = await Promise.all([
+  const [challengesResult, allScoring, stats] = await Promise.all([
     fetch(`${ENGINE_URL}/api/challenges/${name}?limit=${pageSize}&offset=${offset}`, { cache: 'no-store' })
       .then(res => res.ok ? res.json() : null)
       .catch(() => null),
     fetchChallengeScoring(name),
+    fetch(`${ENGINE_URL}/api/stats`, { cache: 'no-store' })
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null),
   ]);
   if (challengesResult) {
     challengesList = challengesResult.challenges || [];
@@ -215,7 +218,22 @@ export default async function ChallengePage({ params, searchParams }: { params: 
         })()}
 
         {/* Challenges List */}
-        <ChallengesList challenges={challengesList} challengeType={name} profiles={profiles} total={challengesTotal} page={page} pageSize={pageSize} basePath={`/challenges/${name}`} />
+        <ChallengesList
+          challenges={challengesList}
+          challengeType={name}
+          profiles={profiles}
+          total={challengesTotal}
+          page={page}
+          pageSize={pageSize}
+          basePath={`/challenges/${name}`}
+          subtitle={
+            <p className="text-sm text-zinc-500 flex gap-4">
+              <span><span className="font-semibold text-zinc-900">{challengesTotal.toLocaleString()}</span> Games</span>
+              {scoringData.length > 0 && <span><span className="font-semibold text-zinc-900">{scoringData.length}</span> Participants</span>}
+              {stats?.challenges?.[name]?.gamesPlayed > 0 && <span><span className="font-semibold text-zinc-900">{stats.challenges[name].gamesPlayed.toLocaleString()}</span> Completed</span>}
+            </p>
+          }
+        />
       </section>
   );
 }

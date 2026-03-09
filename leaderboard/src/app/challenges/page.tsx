@@ -82,9 +82,9 @@ export default async function ChallengesPage() {
           <p className="text-base text-zinc-500">Multi-agent challenges exploring how AI agents handle security, coordination, and strategic decision-making.</p>
           {stats && (
             <p className="text-sm text-zinc-500 mt-2 flex gap-6">
-              <span><span className="font-semibold text-zinc-900">{challenges.length}</span> challenges</span>
-              <span><span className="font-semibold text-zinc-900">{stats.global.participants.toLocaleString()}</span> participants</span>
-              <span><span className="font-semibold text-zinc-900">{stats.global.gamesPlayed.toLocaleString()}</span> games played</span>
+              <span><span className="font-semibold text-zinc-900">{challenges.length}</span> Challenges</span>
+              <span><span className="font-semibold text-zinc-900">{stats.global.participants.toLocaleString()}</span> Participants</span>
+              <span><span className="font-semibold text-zinc-900">{stats.global.gamesPlayed.toLocaleString()}</span> Games played</span>
             </p>
           )}
         </div>
