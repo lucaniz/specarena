@@ -38,6 +38,7 @@ async function fetchUserScores(userId: string): Promise<PlayerScores | null> {
 interface GlobalScoringEntry extends ScoringEntry {
   username?: string;
   model?: string;
+  isBenchmark?: boolean;
 }
 
 async function fetchGlobalScoring(): Promise<GlobalScoringEntry[]> {
@@ -108,6 +109,7 @@ export default async function UserProfilePage({ params, searchParams }: { params
     securityPolicy: entry.metrics["global-average:security"] ?? 0,
     utility: entry.metrics["global-average:utility"] ?? 0,
     model: entry.model,
+    isBenchmark: entry.isBenchmark,
   }));
   const challenges = challengesData.challenges ?? [];
   const profiles = challengesData.profiles ?? {};

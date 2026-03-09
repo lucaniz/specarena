@@ -13,6 +13,7 @@ import { tagColors } from "@/lib/tagColors";
 interface ScoringEntryWithProfile extends ScoringEntry {
   username?: string;
   model?: string;
+  isBenchmark?: boolean;
 }
 
 async function fetchChallengeScoring(challengeType: string): Promise<Record<string, ScoringEntryWithProfile[]>> {
@@ -34,6 +35,7 @@ function graphDataFromScoring(data: Record<string, ScoringEntryWithProfile[]>) {
     securityPolicy: entry.metrics[`${strategyPrefix}:security`] ?? 0,
     utility: entry.metrics[`${strategyPrefix}:utility`] ?? 0,
     model: entry.model,
+    isBenchmark: entry.isBenchmark,
   }));
 }
 

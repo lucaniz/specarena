@@ -195,6 +195,24 @@ export default function LeaderboardGraph({ data = mockData, height = 400, highli
       }
     }
 
+    const dotTipOptions = {
+      channels: {
+        name: { value: "name", label: "Name" },
+        model: { value: (d: LeaderboardData) => d.model ?? "—", label: "Model" },
+      },
+      tip: {
+        format: {
+          name: true,
+          model: true,
+          x: true,
+          y: true,
+          fill: false,
+          r: false,
+          strokeWidth: false,
+        },
+      },
+    };
+
     const chart = Plot.plot({
       width: width,
       height: height,
@@ -222,29 +240,26 @@ export default function LeaderboardGraph({ data = mockData, height = 400, highli
         // Grid lines constrained to [-1, 1]
         Plot.gridX([-1, 0, 1], { y1: -1, y2: 1 }),
         Plot.gridY([-1, 0, 1], { x1: -1, x2: 1 }),
-        // All points as dots
-        Plot.dot(data, {
+        // Non-highlighted points (rendered first, behind)
+        Plot.dot(data.filter((d) => !highlightSet.has(d.name)), {
           x: "securityPolicy",
           y: "utility",
-          fill: (d) => highlightSet.has(d.name) ? "#6366f1" : d.isBenchmark ? "#f59e0b" : paretoSet.has(d.name) ? "#000" : "#a1a1aa",
-          r: (d) => highlightSet.has(d.name) ? 7 : paretoSet.has(d.name) ? 5 : d.isBenchmark ? 4 : 3,
-          stroke: (d) => highlightSet.has(d.name) ? "#4f46e5" : d.isBenchmark ? "#d97706" : "none",
-          strokeWidth: (d) => highlightSet.has(d.name) ? 2 : d.isBenchmark ? 1.5 : 0,
-          channels: {
-            name: { value: "name", label: "Name" },
-            model: { value: (d) => d.model ?? "—", label: "Model" },
-          },
-          tip: {
-            format: {
-              name: true,
-              model: true,
-              x: true,
-              y: true,
-              fill: false,
-              r: false,
-            },
-          },
+          fill: (d) => d.isBenchmark ? "#f59e0b" : paretoSet.has(d.name) ? "#000" : "#a1a1aa",
+          r: (d) => paretoSet.has(d.name) ? 7 : d.isBenchmark ? 6 : 5,
+          stroke: (d) => d.isBenchmark ? "#d97706" : "none",
+          strokeWidth: (d) => d.isBenchmark ? 1.5 : 0,
+          ...dotTipOptions,
         }),
+        // Highlighted point (rendered last, on top)
+        ...highlightSet.size > 0 ? [Plot.dot(data.filter((d) => highlightSet.has(d.name)), {
+          x: "securityPolicy",
+          y: "utility",
+          fill: "#6366f1",
+          r: 7,
+          stroke: "#4f46e5",
+          strokeWidth: 2,
+          ...dotTipOptions,
+        })] : [],
         // Labels (clustered, with non-pareto hidden if overlapping pareto)
         ...visibleLabels.map((d) => {
           return Plot.text([d], {
