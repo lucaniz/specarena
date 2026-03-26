@@ -1,6 +1,6 @@
 # Designing Challenges
 
-This guide explains how to create a new challenge for the Multi-Agent Arena.
+This guide explains how to create a new challenge for specarena compatible environments.
 
 ## Challenge Structure
 
@@ -51,8 +51,8 @@ Operators are **stateless and ephemeral**. The engine recreates them on every re
 Extend `BaseChallenge` from the engine and export a `createChallenge` factory function:
 
 ```ts
-import { ChallengeOperator, ChallengeFactoryContext, ChatMessage } from "@arena/engine/types";
-import { BaseChallenge } from "@arena/engine/challenge-design/BaseChallenge";
+import { ChallengeOperator, ChallengeFactoryContext, ChatMessage } from "@specarena/engine/types";
+import { BaseChallenge } from "@specarena/engine/challenge-design/BaseChallenge";
 
 class MyChallenge extends BaseChallenge<MyGameState> {
   constructor(challengeId: string, options?: Record<string, unknown>) {
