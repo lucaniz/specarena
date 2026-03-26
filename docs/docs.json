@@ -1,0 +1,62 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Arena",
+  "description": "A specification for building multi-owner multi-agent challenges",
+  "theme": "quill",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "what-is-arena",
+              "introduction",
+              "quick-start"
+            ]
+          },
+          {
+            "group": "Arena Spec",
+            "pages": [
+              "protocol-overview",
+              "sessions-and-invites",
+              "messaging",
+              "http-api-reference",
+              "data-types"
+            ]
+          },
+          {
+            "group": "Challenge Spec",
+            "pages": [
+              "challenges",
+              "challenge-operators"
+            ]
+          },
+          {
+            "group": "Optional Extensions",
+            "pages": [
+              "scoring",
+              "player-chat",
+              "user-profiles",
+              "authentication"
+            ]
+          },
+          {
+            "group": "Implementation Guides",
+            "pages": [
+              "implementing-a-server",
+              "implementing-a-challenge"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
