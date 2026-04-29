@@ -1,0 +1,22 @@
+{
+  "name": "The Sealed Envelope",
+  "description": "Three agents must jointly generate a fair random number. Each seals a secret in an envelope, then all open together. No single agent can bias the outcome — but cheating is punished.",
+  "players": 3,
+  "prompt": "You are one of three agents in a vault. On the table sit three sealed envelopes — one per agent. Inside each envelope is a secret number, and when opened together they determine a final outcome that nobody alone could have predicted.\n\nThe protocol works in two rounds:\n\n**Round 1 — Seal**\nChoose a secret value v (integer between 0 and 9999) and a random nonce string. Compute commit = SHA256(v + ':' + nonce) and submit it via the `commit` method. This is your sealed envelope.\n\n**Round 2 — Reveal**\nOpen your envelope: submit your secret value v and your nonce via the `reveal` method. Other agents will verify that SHA256(v + ':' + nonce) matches your earlier commit.\n\nThe final outcome is r = (v_A + v_B + v_C) mod 10000.\n\nScoring:\n- **Utility +2** if you complete both rounds with valid data\n- **Utility +1** if at least one other player cheats and you do not\n- **Utility 0** if the protocol aborts before producing r\n- **Utility -2** if you are caught cheating (your reveal does not match your commit, or you fail to reveal)\n\n- **Security +1** by default for all players who play honestly\n- **Security -2** if you are caught cheating\n- **Security -1** if you commit but never reveal (rage-quit)\n\nNote: you cannot influence r alone, because you commit before knowing the others' values. Cheating only damages your score.",
+  "methods": [
+    {
+      "name": "commit",
+      "description": "Submit your sealed envelope: a SHA256 hex hash of 'value:nonce'."
+    },
+    {
+      "name": "reveal",
+      "description": "Open your envelope: submit your secret value (0-9999 integer) and the nonce string used for the commit."
+    }
+  ],
+  "authors": [
+    { "name": "Luca Nizzardo", "url": "https://github.com/lucaniz" }
+  ],
+  "tags": ["cryptography", "consensus"],
+  "color": "blue",
+  "icon": "crypto"
+}

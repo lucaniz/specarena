@@ -2,7 +2,6 @@
 # Requires AUTH_SECRET — set in .env or your shell environment.
 #
 # For engine-only (no auth): docker compose -f docker-compose.engine.yml up
-
 services:
   engine:
     build:
@@ -12,9 +11,8 @@ services:
     environment:
       - PORT=3001
       - AUTH_SECRET=${AUTH_SECRET:?Set AUTH_SECRET in .env or environment}
-    expose:
-      - "3001"
-
+    ports:
+      - "3001:3001"
   leaderboard:
     build:
       context: .
@@ -22,7 +20,7 @@ services:
     environment:
       # Internal Docker network — leaderboard talks to engine by service name
       - ENGINE_URL=http://engine:3001
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     depends_on:
       - engine

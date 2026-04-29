@@ -19,6 +19,11 @@
       "name": "dining-cryptographers",
       "options": { "players": 3 },
       "scoring": ["win-rate", "consecutive"]
+    },
+    {
+      "name": "sealed-envelope",
+      "options": { "players": 3 },
+      "scoring": ["win-rate", "consecutive"]
     }
   ],
   "scoring": {
